@@ -9,6 +9,8 @@ services:
       - saltcorn-db
     command: "serve"
     restart: unless-stopped
+    networks:
+      - saltcorn
     ports: 
       - "8200:3000"
     environment:
@@ -22,6 +24,10 @@ services:
     image: postgres:13-alpine
     container_name: saltcorn-db
     restart: unless-stopped
+    networks:
+      - saltcorn
+    ports: 
+      - "8201:5432"
     volumes:
       - ./data:/var/lib/postgresql/data 
       - ./docker-entrypoint-initdb.sql:/docker-entrypoint-initdb.d/init.sql 
@@ -29,4 +35,6 @@ services:
       - POSTGRES_USER=${PGUSER} # initdb.sql script will only work for user "postgres"
       - POSTGRES_PASSWORD=${PGPASSWORD}
       - POSTGRES_DB=${PGDATABASE}
-
+networks:
+  saltcorn:
+    name: saltcorn-net
